@@ -1,25 +1,12 @@
 ## TODO
-- Fix rainbow logic
+- Create pull request for test/fix-gen-perf branch
+- Approve + rebase pull request
+
+- Create pull request for fix/rainbow-logic
+- Rebase pull request
+
 ## NICE TO TODO
 - animated text 
-  - lolcat suffers when there are a lack of newlines or very long lines and loses the
-    pattern
-    lolcat creates a vertical rainbow pattern by incrementing an offset each time it encounters
-    a newline. 
-  - there are two schools of thought:
-    - always increment offset
-      - we don't get the rainbow pattern vertically.
-      - we do get an unbroken pattern on a single line.
-      - I think we would also find that in this scheme newlines
-        would be jarring 
-    - only increment on newlines
-      - issue stated aboved
-      - we do get a nice rainbow pattern in what I imagine is the majority of
-      usecases (and my usecase)
-
-      I think we can likely get the best of both worlds by doing 2 until we see
-      that our line is bigger than a maximum and then we can switch strategies and
-      redraw the entire line 
 
 COLORS:
 
@@ -34,9 +21,9 @@ CLI:
   - automatically generate shell completions via build system 
   - package shell completions*
   - flags:
-      --no-color
       -a, --animate
       -D, --duration (how long each segment animates for)
+
 ### lolcat Feature Parity Todo
 - ability to interleave files and stdin: `catbow file0 - file1`* 
 - when we are in a tty (our stdin is attached to a terminal) AND no files AND
