@@ -8,6 +8,16 @@ import (
 	"unicode/utf8"
 )
 
+type RgbColor struct {
+	r uint8
+	g uint8
+	b uint8
+}
+
+func (rgb RgbColor) String() string {
+	return fmt.Sprintf("rgb(%d, %d, %d)", rgb.r, rgb.g, rgb.b)
+}
+
 type Cleanupper interface {
 	Cleanup() string
 }
