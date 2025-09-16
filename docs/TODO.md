@@ -5,9 +5,15 @@
 - Create pull request for fix/rainbow-logic
 - Rebase pull request
 
+- change defaults to -freq .1 -spread 3
+- add short option variants
 ## NICE TO TODO
 - animated text 
 
+- maybe an ability to have "profiles" of settings?
+for example if you know that you'll only be seeing pretty short
+messages you can use different settings to when you want to colorize
+a wall of text
 COLORS:
 
 support for [various types](https://gist.github.com/kurahaupo/6ce0eaefe5e730841f03cb82b061daa2) of escape codes will be detected (TODO: how?) (--color-mode <truecolor | 256col | 16col> to override):
