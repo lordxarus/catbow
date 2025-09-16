@@ -39,7 +39,6 @@ type rainbowStrategy struct {
 }
 
 func (rb *rainbowStrategy) Cleanup() string {
-	fmt.Printf("%", rb.offset)
 	return ansi.Reset
 }
 
