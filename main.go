@@ -56,6 +56,8 @@ func main() {
 		// matters it that it doesn't become MASSIVE and overflow
 		// the color calculation
 		opts.Seed = rand.IntN(65535)
+	} else {
+		opts.Seed = seed
 	}
 	opts.Spread = spread
 	opts.Frequency = freq
