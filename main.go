@@ -13,10 +13,12 @@ import (
 	"github.com/lordxarus/catbow/catbow"
 )
 
-func newMockReader() *bufio.Reader {
-	cmd := exec.Command("./generate_text.py")
+func newMockReader(genLineLen, genNumLines int) *bufio.Reader {
+	cmd := exec.Command(
+		"./generate_text.py",
+		fmt.Sprintf("--line-width=%d", genLineLen),
+		fmt.Sprintf("--num-lines=%d", genNumLines))
 	text, err := cmd.Output()
-	println(len(text))
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -33,19 +35,35 @@ func main() {
 	var freq float64
 	var spread float64
 	var seed int
+	var genLineLen int
+	var genNumLines int
 
 	// these defaults SHOULD come from the Strategy itself
-	flag.BoolVar(&shouldGenerate, "gen", false, "Enable generating random text to colorize")
-	flag.IntVar(&seed, "seed", 0, "Changes what color the rainbow starts on. 0 == random")
-	flag.Float64Var(&spread, "spread", 3.0, "Rotates the rainbow")
-	flag.Float64Var(&freq, "freq", 0.01, "Controls the horizontal width of each color band")
+	flag.BoolVar(
+		&shouldGenerate,
+		"gen",
+		false,
+		"Enable generating random text to colorize")
+	flag.IntVar(&seed,
+		"seed",
+		0,
+		"Changes what color the rainbow starts on. 0 == random")
+	flag.Float64Var(&spread,
+		"spread",
+		1.05,
+		"Rotates the rainbow")
+	flag.Float64Var(&freq,
+		"freq",
+		0.05,
+		"Controls the horizontal width of each color band")
+	flag.IntVar(&genLineLen, "gen-line-width", 80, "")
+	flag.IntVar(&genNumLines, "gen-line-num", 256, "")
 
 	flag.Parse()
 
 	w := io.Writer(os.Stdout)
 	if shouldGenerate {
-		println("mock")
-		r = newMockReader()
+		r = newMockReader(genLineLen, genNumLines)
 	} else {
 		r = bufio.NewReader(os.Stdin)
 	}

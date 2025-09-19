@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # generate test files
 import argparse
-import math
 import random
 from pathlib import Path
 from typing import Generator
@@ -18,17 +17,17 @@ def make_chars(n_char: int, min_char: int, max_char: int) -> Generator[str]:
         # yield chr(min_char) if code < min_char else chr(code)
 
 
-def make_sentence(line_length: int, min_char: int, max_char: int) -> str:
+def make_sentence(line_width: int, min_char: int, max_char: int) -> str:
     return "".join(
-        [c for c in make_chars(line_length, min_char=min_char, max_char=max_char)]
+        [c for c in make_chars(line_width, min_char=min_char, max_char=max_char)]
     )
 
 
 def make_sentences(
-    num_lines: int, line_length: int, min_char: int, max_char: int
+    num_lines: int, line_width: int, min_char: int, max_char: int
 ) -> Generator[str]:
     for _ in range(num_lines):
-        yield make_sentence(line_length, min_char, max_char)
+        yield make_sentence(line_width, min_char, max_char)
 
 
 def main():
@@ -39,7 +38,7 @@ def main():
 
     parser.add_argument("--file", required=False)
     parser.add_argument(
-        "--line-length", type=int, default=80, required=False, help="default: 80"
+        "--line-width", type=int, default=80, required=False, help="default: 80"
     )
     parser.add_argument(
         "--num-lines", type=int, default=512, required=False, help="default: 512"
@@ -63,7 +62,7 @@ def main():
 
     sentences = make_sentences(
         num_lines=args.num_lines,
-        line_length=args.line_length,
+        line_width=args.line_width,
         min_char=args.min,
         max_char=args.max,
     )

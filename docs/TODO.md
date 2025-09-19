@@ -13,6 +13,7 @@
 - maybe an ability to have "profiles" of settings?
 for example if you know that you'll only be seeing pretty short
 messages you can use different settings to when you want to colorize
+    - or just simple -short and -long flags
 a wall of text
 COLORS:
 
