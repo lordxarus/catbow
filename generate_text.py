@@ -8,7 +8,7 @@ from typing import Generator
 
 
 def make_sentences(
-    num_lines: int, line_length: int, min_char: int, max_char: int
+    num_lines: int, line_width: int, min_char: int, max_char: int
 ) -> list[str]:
     def make_chars(n_char: int) -> Generator[str]:
         for _ in range(n_char):
@@ -18,7 +18,7 @@ def make_sentences(
     def make_sentences(n_sentences: int) -> list[str]:
         sentences = []
         for _ in range(n_sentences):
-            sentence = "".join([c for c in make_chars(line_length)])
+            sentence = "".join([c for c in make_chars(line_width)])
             sentences.append(sentence)
         return sentences
 
@@ -33,7 +33,7 @@ def main():
 
     parser.add_argument("--file", required=False)
     parser.add_argument(
-        "--line-length", type=int, default=80, required=False, help="default: 80"
+        "--line-width", type=int, default=80, required=False, help="default: 80"
     )
     parser.add_argument(
         "--num-lines", type=int, default=512, required=False, help="default: 512"
@@ -57,7 +57,7 @@ def main():
 
     sentences = make_sentences(
         num_lines=args.num_lines,
-        line_length=args.line_length,
+        line_width=args.line_width,
         min_char=args.min,
         max_char=args.max,
     )
@@ -67,7 +67,7 @@ def main():
             p.unlink()
         with p.open("a") as f:
             for s in sentences:
-                f.write(f"{s}\n\r")
+                f.write(f"{s}\n")
     else:
         print("\n".join(sentences))
 

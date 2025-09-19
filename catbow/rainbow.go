@@ -2,9 +2,8 @@ package catbow
 
 import (
 	"fmt"
-	"math"
-
 	"github.com/lordxarus/catbow/catbow/encoder/ansi"
+	"math"
 )
 
 type rainbowOptions struct {
@@ -34,8 +33,11 @@ func NewRainbowOptions() *rainbowOptions {
 }
 
 type rainbowStrategy struct {
-	Opts   rainbowOptions
-	offset float64
+	Opts                rainbowOptions
+	offset              float64
+	currLineLength      float64
+	prevLineStartOffset float64
+	wasLastRuneNewLine  bool
 }
 
 func (rb *rainbowStrategy) Cleanup() string {
@@ -43,21 +45,32 @@ func (rb *rainbowStrategy) Cleanup() string {
 }
 
 func NewRainbowStrategy(opts *rainbowOptions) *rainbowStrategy {
-	return &rainbowStrategy{
-		Opts:   *opts,
-		offset: 0,
+	s := &rainbowStrategy{
+		Opts: *opts,
 	}
+	s.offset = float64(opts.Seed) + 1.0
+	// s.offset = &offset
+
+	// var ll = 0.0
+	s.currLineLength = 0.0
+
+	// var llSo = float64(opts.Seed) + 1.0
+	s.prevLineStartOffset = s.offset
+
+	// b := false
+	s.wasLastRuneNewLine = false
+
+	return s
 }
 
 func (rb *rainbowStrategy) calculateRainbow(offset float64) RgbColor {
 	freq := rb.Opts.Frequency
 
-	seed := float64(rb.Opts.Seed)
-	o := math.Round(offset / rb.Opts.Spread)
+	scled_offst := math.Round(offset / rb.Opts.Spread)
 
-	red := math.Sin((freq*o)+rb.Opts.redShift+seed)*127 + 128
-	green := math.Sin((freq*o)+rb.Opts.greenShift+seed)*127 + 128
-	blue := math.Sin((freq*o)+rb.Opts.blueShift+seed)*127 + 128
+	red := math.Sin((freq*scled_offst)+rb.Opts.redShift)*127 + 128
+	green := math.Sin((freq*scled_offst)+rb.Opts.greenShift)*127 + 128
+	blue := math.Sin((freq*scled_offst)+rb.Opts.blueShift)*127 + 128
 
 	return RgbColor{
 		r: uint8(math.Floor(red)),
@@ -65,6 +78,8 @@ func (rb *rainbowStrategy) calculateRainbow(offset float64) RgbColor {
 		b: uint8(math.Floor(blue)),
 	}
 }
+
+// temp spike
 
 func (rb *rainbowStrategy) colorizeRune(r rune) string {
 	/* TODO: Refactor match into a call to calculateRainbow
@@ -78,9 +93,31 @@ func (rb *rainbowStrategy) colorizeRune(r rune) string {
 		return string(r)
 	}
 
-	rgb := rb.calculateRainbow(rb.offset / rb.Opts.Spread)
+	// this is again to deal with the prefix nature of the lolcat code
 
-	rb.offset += 1.0 / rb.Opts.Spread
+	// since we're doing essentially a postfix operation instead of
+	// lolcat's prefix increment we add 1 to the Seed to derive the
+	// starting offset when creating the strategy
+	if r == '\n' || r == '\r' {
+		rb.wasLastRuneNewLine = true
+		rb.currLineLength = 0
+	}
+
+	// what about mutliple newlines in a row?
+	if rb.wasLastRuneNewLine {
+		rb.wasLastRuneNewLine = false
+		rb.prevLineStartOffset += 1
+		rb.offset = rb.prevLineStartOffset
+	} else {
+		cll := rb.currLineLength
+		if cll == 0 {
+			cll += 1
+		}
+		rb.offset = rb.offset + (1 / rb.Opts.Spread)
+	}
+
+	rgb := rb.calculateRainbow(rb.offset)
+	rb.currLineLength += 1
 
 	return fmt.Sprintf(
 		ansi.Esc+"[38;2;%d;%d;%dm%c",
