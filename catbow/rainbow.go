@@ -38,6 +38,7 @@ type rainbowStrategy struct {
 	currLineLength      float64
 	prevLineStartOffset float64
 	wasLastRuneNewLine  bool
+	lastLineBuffer      [512]rune
 }
 
 func (rb *rainbowStrategy) Cleanup() string {
@@ -100,7 +101,6 @@ func (rb *rainbowStrategy) colorizeRune(r rune) string {
 	// starting offset when creating the strategy
 	if r == '\n' || r == '\r' {
 		rb.wasLastRuneNewLine = true
-		rb.currLineLength = 0
 	}
 
 	// what about mutliple newlines in a row?
@@ -109,15 +109,20 @@ func (rb *rainbowStrategy) colorizeRune(r rune) string {
 		rb.prevLineStartOffset += 1
 		rb.offset = rb.prevLineStartOffset
 	} else {
-		cll := rb.currLineLength
-		if cll == 0 {
-			cll = 1
-		}
+		/*
+			A small deviation from lolcat. Offset
+			accumulates the spread:
+
+			off += (1 / Spread) instead of
+			off = (charIndex / Spread).
+
+			Importantly this allows for the offset to be testable
+		*/
+
 		rb.offset = rb.offset + (1 / rb.Opts.Spread)
 	}
 
 	rgb := rb.calculateRainbow(rb.offset)
-	rb.currLineLength += 1
 
 	return fmt.Sprintf(
 		ansi.Esc+"[38;2;%d;%d;%dm%c",
