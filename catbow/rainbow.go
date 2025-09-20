@@ -113,7 +113,7 @@ func (rb *rainbowStrategy) colorizeRune(r rune) string {
 		if cll == 0 {
 			cll = 1
 		}
-		rb.offset = rb.offset + (cll / rb.Opts.Spread)
+		rb.offset = rb.offset + (1 / rb.Opts.Spread)
 	}
 
 	rgb := rb.calculateRainbow(rb.offset)
