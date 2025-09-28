@@ -57,7 +57,7 @@ func main() {
 		0.05,
 		"Controls the horizontal width of each color band")
 	flag.IntVar(&genLineLen, "gen-line-width", 80, "")
-	flag.IntVar(&genNumLines, "gen-line-num", 256, "")
+	flag.IntVar(&genNumLines, "gen-num-lines", 256, "")
 
 	flag.Parse()
 

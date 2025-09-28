@@ -41,7 +41,8 @@ type rainbowStrategy struct {
 	lastLineBuffer      [512]rune
 }
 
-func (rb *rainbowStrategy) Cleanup() string {
+// extract to ColorEncoder
+func (rb *rainbowStrategy) CleanupStr() string {
 	return ansi.Reset
 }
 
@@ -65,9 +66,28 @@ func NewRainbowStrategy(opts *rainbowOptions) *rainbowStrategy {
 }
 
 func (rb *rainbowStrategy) calculateRainbow(offset float64) RgbColor {
+	/*
+
+		Color math:
+
+		freq: .05
+		spread: 1.05
+		seed: 1
+
+		// first character, offset starts at seed + 1
+		offset: 2
+		scled_offset = 2 / 1.05 = 1.9047619047619047
+		red = sin(.05 * scled_offset) + 0 * 127 + 128
+		red =
+
+
+
+
+	*/
+
 	freq := rb.Opts.Frequency
 
-	scled_offst := math.Round(offset / rb.Opts.Spread)
+	scled_offst := offset / rb.Opts.Spread
 
 	red := math.Sin((freq*scled_offst)+rb.Opts.redShift)*127 + 128
 	green := math.Sin((freq*scled_offst)+rb.Opts.greenShift)*127 + 128
@@ -79,8 +99,6 @@ func (rb *rainbowStrategy) calculateRainbow(offset float64) RgbColor {
 		b: uint8(math.Floor(blue)),
 	}
 }
-
-// temp spike
 
 func (rb *rainbowStrategy) colorizeRune(r rune) string {
 	/* TODO: Refactor match into a call to calculateRainbow

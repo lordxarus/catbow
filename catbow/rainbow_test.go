@@ -47,37 +47,32 @@ func TestColorReset(t *testing.T) {
 	rb := setupRainbow()
 	out := rb.colorizeRune('a')
 	assert.NotContains(t, out, ansi.Esc+"[0m")
-	out = rb.Cleanup()
+	out = rb.CleanupStr()
 	assert.Equal(t, out, ansi.Esc+"[0m")
 }
 
-// func TestRainbowAlgorithm(t *testing.T) {
-// 	rb := setupRainbow()
-// 	rb.Opts.Seed = 1
-// 	rb.Opts.Spread = 3.0
+func TestRainbowAlgorithm(t *testing.T) {
+	rb := setupRainbow()
+	rb.Opts.Seed = 1
+	rb.Opts.Spread = 3.0
 
-// 	defer fmt.Println(rb.Cleanup())
+	defer fmt.Println(rb.CleanupStr())
 
-// 	a := rb.offset
+	assert.Equal(t, 2, rb.offset)
+	rgb := rb.calculateRainbow(rb.offset)
+	assert.Equal(t, RgbColor{127, 236, 17}, rgb)
 
-// 	a += 10
-
-// 	rgb := rb.calculateRainbow(rb.offset)
-// 	assert.Equal(t, 2.0, rb.offset)
-// 	assert.Equal(t, RgbColor{127, 236, 17}, rgb)
-
-// 	rb.offset += 10
-// 	rgb = rb.calculateRainbow(rb.offset)
-// 	assert.Equal(t, rb.offset, 0)
-// 	assert.Equal(t, RgbColor{233, 132, 14}, rgb)
-// }
+	rb.offset += 10
+	rgb = rb.calculateRainbow(rb.offset)
+	assert.Equal(t, RgbColor{233, 132, 14}, rgb)
+}
 
 func TestOffsetProgression(t *testing.T) {
 	/*
 		Explanation of the lolcat offset:
 	*/
 	rb := setupRainbow()
-	defer fmt.Println(rb.Cleanup())
+	defer fmt.Println(rb.CleanupStr())
 
 	// offset gets initialized to seed (1 if using setupRainbow() test setup)
 	// in lolcat the input is loaded into memory and split on lines. before the first

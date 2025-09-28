@@ -1,0 +1,27 @@
+freq: 0.05
+spread: 1.05
+seed: 1
+
+input:  asdf
+
+iter 1
+---------
+offset: 2
+
+red = 
+green = 
+blue =
+iter 1
+---------
+offset: 2
+
+red = 
+green = 
+blue =
+iter 1
+---------
+offset: 2
+
+red = 
+green = 
+blue =
